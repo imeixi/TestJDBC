@@ -20,11 +20,13 @@ public class TestJDBC {
 		 * 3、创建连接Connection对象，使用Driver 对象的connection（url，info）方法。
 		 */
 		
+		//mysql链接
 //		Driver driver = new com.mysql.jdbc.Driver();
 //		String url = "jdbc:mysql://172.31.30.83/test";
 //		String user = "root";
 //		String password = "123456";
 		
+		//oracle链接
 		Driver driver = new oracle.jdbc.driver.OracleDriver();
 		String url = "jdbc:oracle:thin:@172.31.30.84:1521:orcl";
 		String user = "scott";
