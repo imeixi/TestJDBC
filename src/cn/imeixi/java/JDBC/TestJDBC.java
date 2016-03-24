@@ -11,6 +11,20 @@ import org.junit.Test;
 
 public class TestJDBC {
 	
+	@Test
+	public Connection getConnection(){
+		/**
+		 * 1、创建连接必备的4个参数 driverClass，jdbcUrl，uesr，password
+		 * 2、通过Properties对象获取四个参数
+		 * 3、加载driverclass
+		 * 4、
+		 */
+		
+		
+		
+		return null;
+	}
+	
 	
 	
 	
@@ -28,7 +42,7 @@ public class TestJDBC {
 //		String user = "root";
 //		String password = "123456";
 		
-		Driver driver = new Driver();
+		Driver driver = new com.mysql.jdbc.Driver();
 		String url = "jdbc:mysql://172.31.30.83/test";
 		String user = "root";
 		String password = "123456";
