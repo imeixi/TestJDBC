@@ -6,9 +6,14 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.junit.Test;
+
+import java.sql.ResultSetMetaData;
 
 import java.sql.PreparedStatement;
 
@@ -132,5 +137,72 @@ public class TestJDBC {
 		}
 		
 	}
+	
+	
+	/**
+	 * 练习三，写一个通用的get方法，可根据不同的对象类型返回对象
+	 * 
+	 */
+	public <T> T get(Class <T> clazz,String sql,Object ... args){
+		
+		T entity = null;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultset = null;
+		
+		try {
+			//1、创建数据库链接
+			connection = JDBCTools.getConnetction();
+			//2、获得PreparedStatment对象，填充sql
+			preparedStatement = connection.prepareStatement(sql);
+			
+			for(int i = 0; i < args.length; i++){
+				preparedStatement.setObject(i+1, args[i]);
+			}
+			//3、执行sql，得到Resultset
+			
+			resultset = preparedStatement.executeQuery();
+			//4、创建 Map<>
+			Map<String, Object> values = new HashMap<String, Object>();
+			
+			//5、判断Resultset是否为空（.next（））
+			if(resultset != null){
+				//6、不为空，创建ResultsetMeteData对象，获取sql别名，（对象属性名）
+				ResultSetMetaData rsmd = resultset.getMetaData();
+				//7、ResultSet获取属性值
+				if(resultset.next()){
+					for(int i = 0;i < rsmd.getColumnCount();i++){
+						String columnLable = rsmd.getColumnLabel(i+1);
+						Object object = resultset.getObject(i+1);
+						//8、Map赋值
+						values.put(columnLable, object);
+					}
+				}
+				//9、用反射创建class对象
+				
+				entity = clazz.newInstance();
+				
+				//10、便利Map，使用Utilbean 工具类给对象赋值
+				for(Map.Entry<String, Object> entry:values.entrySet()){
+					String propertiesName = entry.getKey();
+					Object propertiesValue = entry.getValue();
+					
+					BeanUtils.setProperty(entity, propertiesName, propertiesValue);
+				}
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			JDBCTools.release(resultset, preparedStatement, connection);
+		}
+		
+		
+		
+		return null;
+		
+	}
+	
 	
 }
