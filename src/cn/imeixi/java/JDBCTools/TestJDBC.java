@@ -188,6 +188,7 @@ public class TestJDBC {
 					Object propertiesValue = entry.getValue();
 					
 					BeanUtils.setProperty(entity, propertiesName, propertiesValue);
+					
 				}
 				
 			}
